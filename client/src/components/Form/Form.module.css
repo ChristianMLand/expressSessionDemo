@@ -1,0 +1,79 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form button {
+    align-self: flex-start;
+}
+
+.error {
+    color: #e0647f;
+    background: #83213680;
+    padding: 0.25rem;
+    border-radius: 3px;
+}
+
+.field {
+    border-bottom: 2px solid #b8bac180;
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    transition: border-color 0.25s; 
+}
+
+.field:has(input:user-valid) {
+    border-color: #36bb81;
+}
+
+.field:has(input:user-invalid),
+.field:has(+ .error):has(input:user-valid) {
+    border-color: #e0647f;
+}
+
+.field button:has(i) {
+    background: transparent;
+    padding: 0;
+    transition: none;
+    border: none;
+    color: #b8bac180;
+}
+
+.field button i {
+    color: inherit;
+    transition: color 0.25s;
+}
+
+.field button:has(i):hover {
+    color: #b8bac1bd;
+}
+.field button:has(i):focus,
+.field button:has(i):focus-visible {
+    border-color: none;
+    outline: none;
+    color: #646cff;
+}
+
+.field input {
+    border: none;
+    outline: none;
+    background: transparent;
+    flex: 1;
+    padding: 0.25rem;
+}
+
+.field input::placeholder {
+    color: #b8bac180;
+    opacity: 1;
+    font-weight: normal;
+}
+
+.field input:hover::placeholder {
+    color: #b8bac1bd;
+}
+
+.field:has(input:focus),
+.field:has(input:focus-visible) {
+    border-color: #646cff;
+}

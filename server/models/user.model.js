@@ -1,7 +1,7 @@
-const bcrypt = require("bcrypt");
-const mongoose = require("mongoose");
+import bcrypt from 'bcrypt';
+import { Schema, model } from 'mongoose';
 
-const UserSchema = new mongoose.Schema({
+const UserSchema = new Schema({
     username: { 
         type: String,
         required: [true, "Username is required"],
@@ -10,6 +10,7 @@ const UserSchema = new mongoose.Schema({
     email: {
         type: String,
         required: [true, "Email is required"],
+        unique: true,
         validate: {
             validator: val => /^([\w-\.]+@([\w-]+\.)+[\w-]+)?$/.test(val),
             message: "Please enter a valid email"
@@ -21,20 +22,18 @@ const UserSchema = new mongoose.Schema({
         minlength: [8, "Password must be at least 8 characters long"]
     }
 }, { timestamps: true });
-// set confirmPassword as a virtual field so it doesn't get stored in DB
-UserSchema.virtual("confirmPassword");
-// validate that password and confirm password match when registering
-UserSchema.pre("validate", function(next) {
-    if (this.password !== this.confirmPassword) {
-        this.invalidate("confirmPassword", "Password must match confirm password");
+
+UserSchema.pre("save", async function(next) {
+    // validate emails uniqueness
+    if (await this.constructor.findOne({ email: this.email })) {
+        throw this.invalidate("email", "Email is already in use");
+    } else {
+        // hash the password before saving it to the database
+        this.password = await bcrypt.hash(this.password, 10);
     }
     next();
 });
-// hash the password before storing in db
-UserSchema.pre("save", async function(next) { 
-    this.password = await bcrypt.hash(this.password, 10);
-    next();
-});
+
 // define a static method for our model to handle login validations
 UserSchema.statics.checkLogin = async function({ email, password }) { 
     const user = await this.findOne({ email });
@@ -44,4 +43,5 @@ UserSchema.statics.checkLogin = async function({ email, password }) {
     return user;
 };
 
-module.exports = mongoose.model("User", UserSchema); 
+const User = model("User", UserSchema); 
+export default User;

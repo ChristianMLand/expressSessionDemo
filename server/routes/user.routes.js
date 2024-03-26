@@ -1,6 +1,10 @@
-const UserController = require('../controllers/user.controller');
-const { authenticate } = require("../config/middleware.config");
-// authenticate middleware would be used for any routes we want to ensure the user is logged in for
-module.exports = app => {
-    app.post("/api/users", UserController.create);
-};
+import userController from '../controllers/user.controller.js';
+import { Router } from 'express';
+
+const router = Router();
+
+router.route("/")
+    .post(userController.create);
+
+
+export default router;

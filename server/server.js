@@ -1,27 +1,32 @@
-const session = require("express-session");
-const express = require("express");
-const cors = require("cors");
+import dotenv from 'dotenv';
+import express from 'express';
+import cors from 'cors';
+import session from 'express-session';
+import dbConnect from './config/mongoose.config.js';
+import sessionRouter from './routes/session.routes.js';
+import userRouter from './routes/user.routes.js';
 
-require('dotenv').config();
-require("./config/mongoose.config");
+dotenv.config();
 
-const PORT = process.env.PORT;
+dbConnect(process.env.DB_URI, process.env.DB_NAME);
+
 const app = express();
 
 app.use(
-    cors({credentials: true, origin: "http://localhost:5173"}), 
-    express.urlencoded({ extended: true }), 
+    cors({ credentials: true, origin: process.env.CLIENT_URI }),
+    express.urlencoded({ extended: true }),
     express.json(),
     session({
         resave: false,
-        saveUninitialized: true,
-        name: "UserCookie",
+        saveUninitialized: false,
+        name: "AuthCookie",
         secret: process.env.COOKIE_SECRET,
-        cookie: { secure: process.env.NODE_ENV === "production" }
+        cookie: { secure: process.env.MODE === "production" },
     })
 );
 
-require("./routes/auth.routes")(app);
-require("./routes/user.routes")(app);
+app.use("/api/session", sessionRouter);
+app.use("/api/users", userRouter);
 
-app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
+const PORT = process.env.PORT;
+app.listen(PORT, () => console.log("Listening on port:", PORT));

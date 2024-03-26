@@ -1,0 +1,40 @@
+.tabContainer {
+    display: flex;
+    flex-direction: column;
+    /* gap: 0.5rem; */
+}
+
+.tabContainer > ul {
+    list-style: none;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.tabContainer > ul button {
+    border-radius: 8px 8px 0 0;
+    transition: none;
+    border: 2px solid transparent;
+    transition: border-color 0.25s;
+}
+
+.tabContainer > ul button:hover,
+.tabContainer > ul button:focus,
+.tabContainer > ul button:focus-visible {
+    border: 2px solid #646cff;
+    outline: none;
+    border-bottom: 2px solid transparent;
+}
+
+.tabContainer > div {
+    min-width: 20rem;
+    padding: 1em;
+    box-shadow: 0px 5px 8px -2px #1a1a1a;
+    border-radius: 0 8px 8px 8px;
+    background: #ffffff0d;
+}
+
+.tabContainer > ul button.activeTab {
+    background: #ffffff0d;
+    color: #ffffffde;
+}

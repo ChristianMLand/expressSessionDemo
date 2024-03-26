@@ -1,20 +1,15 @@
-import { Routes, Route } from "react-router-dom";
-import HomeDisplay from "./views/HomeDisplay";
-import SuccessDisplay from "./views/SuccessDisplay";
-import AppContext from "./libs/context";
-import { useState } from "react";
+import { Routes, Route } from 'react-router-dom';
+import { Home, Dashboard, NotFound } from '~/views';
+import { AuthContext } from './components';
 
-function App() {
-  const [loggedUser, setLoggedUser] = useState();
-
+export default function App() {
   return (
-    <AppContext.Provider value={{loggedUser, setLoggedUser}}>
+    <AuthContext>
       <Routes>
-        <Route path="/" element={<HomeDisplay/>} />
-        <Route path="/success" element={<SuccessDisplay />} />
+        <Route path="/" element={<Home />}/>
+        <Route path="/dashboard" element={<Dashboard />}/>
+        <Route path="*" element={<NotFound />}/>
       </Routes>
-    </AppContext.Provider>
-  )
+    </AuthContext>
+  );
 }
-
-export default App
